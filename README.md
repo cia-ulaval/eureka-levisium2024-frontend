@@ -1,5 +1,5 @@
 # Deployment
-This is the deployment branch! This branch's file is the results of the "npm run build" command in the main branch and 2 functionnal necessary files for Heroku :
+This is the deployment branch! This branch's file is the results of the "npm run build" command in the main branch (that created the compiled app files in the "dist" folder) and 2 functionnal necessary files for Heroku :
 - index.php
 - composer.json
 
