@@ -222,6 +222,7 @@ async function endGame() {
     await fetchScore(path)
     setShowModal(true)
     setMap(path)
+    path = []
 }
 
 onLoop(({delta}) => {
@@ -396,7 +397,7 @@ export default {
     methods: {
         resetMap() {
             this.aiPath = null
-            this.path = null
+            this.humanPath = null
             setShowModal(false)
             this.setCamera()
             this.tensorToMap()
