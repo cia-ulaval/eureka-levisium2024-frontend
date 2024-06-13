@@ -4,7 +4,6 @@ import {shallowRef} from "vue";
 import {useRenderLoop, useTexture} from "@tresjs/core";
 import ResultModal from "@/components/ResultModal.vue";
 
-
 const upDownTexture = await useTexture({
     map: '/textures/upDown.jpg'
 });
@@ -28,6 +27,7 @@ const rainbowTexture = await useTexture({
 });
 
 
+const cameraRef = shallowRef(PerspectiveCamera)
 const model = await useFBX('/models/Car.fbx')
 
 const boxRef = shallowRef(null)
@@ -37,6 +37,21 @@ const {onLoop} = useRenderLoop()
 
 let carPosition = null
 let carOrientation = "up"
+
+function correctNextDirectionForCamera(nextDirection) {
+    const cameraPositionX = cameraRef.value.position.x
+    const cameraPositionZ = cameraRef.value.position.z
+
+    if (cameraPositionX >= 0 && cameraPositionX >= Math.abs(cameraPositionZ)) {
+        return {"up": "right", "down": "left", "left": "up", "right": "down"}[nextDirection]        
+    } else if (cameraPositionX <= 0 && Math.abs(cameraPositionX) >= Math.abs(cameraPositionZ)) {
+        return {"up": "left", "down": "right", "left": "down", "right": "up"}[nextDirection]        
+    } else if (cameraPositionZ >= 0 && Math.abs(cameraPositionZ) >= Math.abs(cameraPositionX)) {
+        return {"up": "down", "down": "up", "left": "right", "right": "left"}[nextDirection]
+    } else {
+        return nextDirection
+    }
+}
 
 function moveMap(delta) {
     const rowCol = getTensorPosition()
@@ -244,23 +259,31 @@ onLoop(({delta}) => {
                     if (isNextCubeAnIntersection()) {
                         state = "stopped"
                         cubeToCross = getTensorPosition()
-                        nextDirection = null
+                        uiNextDirection = null
+                        nextDirectionCorrectedForCamera = null
                         break;
                     } else {
                         moveMap(delta)
                         break;
                     }
                 case "stopped":
-                    if (nextDirection !== null && getAvailableTurns().includes(nextDirection)) {
+                    if (uiNextDirection != null) {
+                        nextDirectionCorrectedForCamera = correctNextDirectionForCamera(uiNextDirection)
+                    } else {
+                        break;
+                    }
+
+                    if (getAvailableTurns().includes(nextDirectionCorrectedForCamera)) {
                         state = "crossing"
-                        toDirection = nextDirection
+                        toDirection = nextDirectionCorrectedForCamera
                         if (carOrientation !== toDirection) {
                                 setCarOrientation(toDirection)
                             }
                         break;
                     } else {
+                        uiNextDirection = null
                         break;
-                    }
+                    }                        
                 case "crossing":
                     if (cubeToCross !== null && cubeToCross[0] === getTensorPosition()[0] && cubeToCross[1] === getTensorPosition()[1]) {
                         if (distanceToCross === null) {
@@ -303,7 +326,7 @@ onLoop(({delta}) => {
             <button class="arrows" @click="move('right')"><img src="../assets/arrow.svg" class="right"></button>
         </div>
         <TresCanvas clear-color="#82DBC5" window-size="true" class="canvas">
-            <TresPerspectiveCamera :position="camera.position" :look-at="mapCenter" :far="camera.far"/>
+            <TresPerspectiveCamera ref="cameraRef" :position="camera.position" :look-at="mapCenter" :far="camera.far"/>
             <OrbitControls/>
             <TresScene>
                 <TresMesh v-for="(cube, index) in map" :key="index" :position="cube.position" ref="boxRef">
@@ -348,13 +371,15 @@ let setMap = null
 let START = null
 let END = null
 
-let nextDirection = null
+let uiNextDirection = null
+let nextDirectionCorrectedForCamera = null
 
 import tensor from '../data/tensor.json'
 import speedTensor from '../data/speedTensor.json'
 import stopTensor from '../data/stopTensor.json'
 import { getMap } from '@/js/map.js'
 import { getScore } from "@/js/score";
+import { PerspectiveCamera } from 'three';
 
 export default {
     name: 'ThreeCanvas',
@@ -467,16 +492,16 @@ export default {
         move(direction) {
             switch (direction) {
                 case 'up':
-                    nextDirection = 'up'
+                    uiNextDirection = 'up'
                     break;
                 case 'left':
-                    nextDirection = 'left'
+                    uiNextDirection = 'left'
                     break;
                 case 'right':
-                    nextDirection = 'right'
+                    uiNextDirection = 'right'
                     break;
                 case 'down':
-                    nextDirection = 'down'
+                    uiNextDirection = 'down'
                     break;
                 default:
                     break;
