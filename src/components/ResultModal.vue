@@ -19,7 +19,7 @@
         <div class="containerImg">
           <img class="cloud-img" src="../assets/cloudversify.svg" alt="cloud" :style="{
             height: 120 * (score.co2/100) + 'px'}"/>
-            <img class="car-img" src="../assets/co2-emissions.png" alt="car"/>
+            <img class="car-img" src="../assets/co2-emissions-human.png" alt="car"/>
         </div>
         <div class="title-container">
           <h2>LE RÉSULTAT DE L'IA</h2>
@@ -38,7 +38,7 @@
         <div class="containerImg">
           <img class="cloud-img" src="../assets/cloudversify.svg" alt="cloud" :style="{
             height: 120 * (aiScore.co2/100) + 'px'}"/>
-            <img class="car-img" src="../assets/co2-emissions.png" alt="car"/>
+            <img class="car-img" src="../assets/co2-emissions-robot.png" alt="car"/>
         </div>
       </div>
     </div>
