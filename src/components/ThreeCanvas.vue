@@ -283,7 +283,7 @@ onLoop(({delta}) => {
                     } else {
                         uiNextDirection = null
                         break;
-                    }                        
+                    }
                 case "crossing":
                     if (cubeToCross !== null && cubeToCross[0] === getTensorPosition()[0] && cubeToCross[1] === getTensorPosition()[1]) {
                         if (distanceToCross === null) {
