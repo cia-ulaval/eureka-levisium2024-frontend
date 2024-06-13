@@ -42,12 +42,17 @@ function correctNextDirectionForCamera(nextDirection) {
     const cameraPositionX = cameraRef.value.position.x
     const cameraPositionZ = cameraRef.value.position.z
 
+    const up = "up"
+    const down = "down"
+    const left = "left"
+    const right = "right"
+
     if (cameraPositionX >= 0 && cameraPositionX >= Math.abs(cameraPositionZ)) {
-        return {"up": "right", "down": "left", "left": "up", "right": "down"}[nextDirection]        
+        return {up: right, down: left, left: up, right: down}[nextDirection]        
     } else if (cameraPositionX <= 0 && Math.abs(cameraPositionX) >= Math.abs(cameraPositionZ)) {
-        return {"up": "left", "down": "right", "left": "down", "right": "up"}[nextDirection]        
+        return {up: left, down: right, left: down, right: up}[nextDirection]        
     } else if (cameraPositionZ >= 0 && Math.abs(cameraPositionZ) >= Math.abs(cameraPositionX)) {
-        return {"up": "down", "down": "up", "left": "right", "right": "left"}[nextDirection]
+        return {up: down, down: up, left: right, right: left}[nextDirection]
     } else {
         return nextDirection
     }
