@@ -320,7 +320,7 @@ onLoop(({delta}) => {
 })
 </script>
 <template>
-    <div class="container">
+    <div class="container disable-double-tap-zoom">
         <ResultModal :show-modal="showModal" :score="score" :aiScore="aiScore" @close-modal="resetMap()"/>
         <div v-if="!showModal" class="gamePad">
             <br>
@@ -660,6 +660,10 @@ img {
     position: relative;
     left: 0;
     top: 0;
+}
+
+.disable-double-tap-zoom {
+  touch-action: manipulation;
 }
 
 .canvas {
