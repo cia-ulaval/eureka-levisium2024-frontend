@@ -320,7 +320,7 @@ onLoop(({delta}) => {
 })
 </script>
 <template>
-    <div class="container disable-double-tap-zoom">
+    <div class="container disable-double-tap-zoom prevent-selection">
         <ResultModal :show-modal="showModal" :score="score" :aiScore="aiScore" @close-modal="resetMap()"/>
         <div v-if="!showModal" class="gamePad">
             <br>
@@ -664,6 +664,12 @@ img {
 
 .disable-double-tap-zoom {
   touch-action: manipulation;
+}
+
+.prevent-selection {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .canvas {
