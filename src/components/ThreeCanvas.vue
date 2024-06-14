@@ -663,7 +663,7 @@ img {
 }
 
 .disable-double-tap-zoom {
-  touch-action: manipulation;
+  touch-action: manipulation !important;
 }
 
 .prevent-selection {
